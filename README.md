@@ -33,9 +33,11 @@ Accédez à la plateforme de présentation interactive ici :
 ---
 
 ## 📺 Démonstration Vidéo
-*Regardez la plateforme en action (Lecteur intégré) :*
+*Cliquez sur l'image ci-dessous pour voir la vidéo de démonstration :*
 
-![](Vedavatfinal.mp4)
+[![Regarder la vidéo](screenshots/00_presentation_hero.png)](https://github.com/moenes-20/SKIN_CANCER_AI/blob/main/Vedavatfinal.mp4)
+
+> 💡 **Astuce** : Si l'image ci-dessus ne lance pas le lecteur, [cliquez ici pour voir la vidéo en plein écran](https://github.com/moenes-20/SKIN_CANCER_AI/blob/main/Vedavatfinal.mp4).
 
 ---
 
