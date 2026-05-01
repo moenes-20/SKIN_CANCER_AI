@@ -11,37 +11,29 @@ app_port: 7860
 
 > **Une solution complète de diagnostic dermatologique assisté par IA, alliant la puissance du Deep Learning (VGG16) à une architecture Cloud moderne.**
 
-[![Vercel Presentation](https://img.shields.io/badge/Live-Vercel_Site-blue?style=for-the-badge&logo=vercel)](https://skin-cancer-ai-beta.vercel.app/)
-[![Hugging Face App](https://img.shields.io/badge/AI_Engine-Hugging_Face-orange?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/moenes123/skin-cancer-ai-v2)
+**🌐 Site Officiel :** [https://skin-cancer-ai-beta.vercel.app/](https://skin-cancer-ai-beta.vercel.app/)
 
 ---
 
 ## 📺 Démonstration Vidéo
-Découvrez le parcours utilisateur complet, de la présentation à l'analyse clinique :
+*Regardez la plateforme en action :*
 
-<div align="center">
-  <video src="Vedavatfinal.mp4" width="100%" controls></video>
-</div>
+<p align="center">
+  <video src="https://github.com/moenes-20/SKIN_CANCER_AI/blob/main/Vedavatfinal.mp4?raw=true" width="100%" controls="controls"></video>
+</p>
 
 ---
 
 ## 📸 Aperçu de la Plateforme
 
-### 1. Site de Présentation (Vercel)
-Une interface immersive avec animations "scroll-stop" pour présenter le projet.
-![Vercel Presentation](screenshots/01_home_vercel.png)
-
-### 2. Dashboard Clinique (Hugging Face)
-Le centre de contrôle pour la gestion des patients et des analyses.
-![Dashboard](screenshots/02_dashboard.png)
-
-### 3. Processus d'Analyse IA
-L'utilisateur dépose une image pour une prédiction instantanée.
+### 1. Diagnostic IA en temps réel
 ![Analyse](03_predict_exemple.png)
 
-### 4. Rapport de Diagnostic
-Résultats détaillés générés par le modèle VGG16 fine-tuné.
+### 2. Rapport de Résultats Professionnel
 ![Résultat](03_predict_exemple_resultat.png)
+
+### 3. Dashboard & Historique Clinique
+![Dashboard](screenshots/02_dashboard.png)
 
 ---
 
@@ -67,21 +59,9 @@ graph TD
 
 ## 🧠 Le Modèle IA
 Le cœur du système repose sur une architecture **VGG16** pré-entraînée sur ImageNet, puis fine-tunée sur un dataset médical de lésions cutanées.
-- **Entrée** : Images 224x224 pixels.
-- **Sortie** : Classification Binaire (Bénin / Malin) avec score de confiance.
-- **Performance** : Optimisé pour la détection clinique assistée.
+- **Classification** : Bénin / Malin (Malignant).
+- **Confiance** : Calculée en temps réel pour chaque diagnostic.
 
 ---
 
-## 🚀 Installation & Déploiement
-
-### Déploiement Cloud
-- **Frontend** : Connecter le dossier `/presentation` à Vercel.
-- **Backend** : Utiliser le script `upload_to_hf.py` pour envoyer le projet sur Hugging Face.
-
-### Lancement Local
-Exécuter le fichier `LANCER_SKIN_CANCER_AI.bat` pour démarrer le serveur Flask localement sur le port 5000.
-
----
-
-© 2026 Plateforme Skin Cancer AI - Développé pour l'excellence médicale.
+© 2026 Plateforme Skin Cancer AI - Clinical Platform.
