@@ -27,9 +27,9 @@ app_port: 7860
 ---
 
 ## 📺 Démonstration Vidéo
-*Aperçu vidéo du projet (Lecteur natif) :*
+*Aperçu vidéo du projet :*
 
-![](Vedavatfinal.mp4)
+![Démonstration du projet](Vedavatfinal.gif)
 
 ---
 
