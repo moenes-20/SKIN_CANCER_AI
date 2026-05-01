@@ -7,7 +7,7 @@ load_dotenv()
 
 # CONFIGURATION
 REPO_ID = "moenes123/skin-cancer-ai-v2" 
-TOKEN = "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" 
+TOKEN = "REMPLACER_PAR_VOTRE_TOKEN_HF_ICI" 
 
 api = HfApi()
 
