@@ -398,25 +398,32 @@ const loader=document.getElementById('loader');
 function pad(n){return String(n).padStart(4,'0')}
 
 (function loadAll(){
-  let i=0;
-  function next(){
-    if(i>=TOTAL){
-      loader.classList.add('hide');
-      drawFrame(0);
-      return;
-    }
+  // Téléchargement parallèle asynchrone pour une vitesse maximale
+  for(let i=0; i<TOTAL; i++){
     const img=new Image();
-    img.src=`frames/frame_${pad(i+1)}.webp`;
+    frames[i]=img; 
+    
     img.onload=img.onerror=()=>{
       loadedCount++;
       const p=Math.round(loadedCount/TOTAL*100);
-      bar.style.width=p+'%';
-      pct.textContent=`Chargement des images… ${p}%`;
-      i++; next();
+      
+      if(bar && pct) {
+        bar.style.width=p+'%';
+        pct.textContent=`Accélération… ${p}%`;
+      }
+      
+      // Afficher le site TRÈS TÔT (après 15 images) sans attendre les 120
+      if(loadedCount === 15 || loadedCount === TOTAL){
+        if(!loader.classList.contains('hide')) {
+            loader.classList.add('hide');
+            drawFrame(0);
+        }
+      }
     };
-    frames[i]=img;
+    
+    // Déclenche le téléchargement
+    img.src=`frames/frame_${pad(i+1)}.webp`;
   }
-  next();
 })();
 
 // ── Count-up ────────────────────────────────────────────────────────────────
