@@ -27,13 +27,9 @@ app_port: 7860
 ---
 
 ## 📺 Démonstration Vidéo
-*Lecteur interactif (Patientez quelques secondes pour le chargement) :*
+*Aperçu vidéo du projet (Lecteur natif) :*
 
-<div align="center">
-  <video src="https://github.com/moenes-20/SKIN_CANCER_AI/raw/main/Vedavatfinal.mp4" width="100%" controls muted autoplay loop>
-    Votre navigateur ne supporte pas le lecteur vidéo. <a href="https://github.com/moenes-20/SKIN_CANCER_AI/blob/main/Vedavatfinal.mp4">Cliquez ici pour voir la vidéo</a>.
-  </video>
-</div>
+![](Vedavatfinal.mp4)
 
 ---
 
