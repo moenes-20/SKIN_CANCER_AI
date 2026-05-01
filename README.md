@@ -26,12 +26,20 @@ app_port: 7860
 
 ---
 
+## 🌐 Plateforme Interactive (Live)
+
+Découvrez le projet en direct via notre environnement de déploiement cloud. L'application offre une présentation 3D interactive et un accès direct au moteur d'intelligence artificielle :
+
+[![Lancer le site web](https://img.shields.io/badge/Vercel-Lancer_le_Site_Web-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://skin-cancer-ai-beta.vercel.app/)
+
+👉 **[https://skin-cancer-ai-beta.vercel.app/](https://skin-cancer-ai-beta.vercel.app/)**
+
+---
+
 ## 📺 Démonstration Vidéo
-*Vivez l'expérience complète et interactive directement sur notre site de présentation :*
+*Aperçu vidéo interactif du projet :*
 
-[![Démonstration du projet](screenshots/00_presentation_hero.png)](https://skin-cancer-ai-beta.vercel.app/)
-
-👉 **[Cliquez ici pour lancer la démonstration interactive (Site Web)](https://skin-cancer-ai-beta.vercel.app/)**
+![Démonstration du projet](Vedavatfinal.gif)
 
 ---
 
