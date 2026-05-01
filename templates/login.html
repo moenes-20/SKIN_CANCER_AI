@@ -339,29 +339,34 @@ body.app-body { overflow: hidden }
     dots.forEach((d,i)  => d.classList.toggle('active', i === phase));
   }
 
-  /* Preload frames */
+  /* Preload frames - Parallèle & Asynchrone */
   function pad(n){ return String(n).padStart(4,'0') }
   const BASE = "{{ url_for('static', filename='img/login-frames/frame_') }}";
-  let i = 0;
-  function next(){
-    if(i >= TOTAL){
-      loader.classList.add('hide');
-      running = true;
-      requestAnimationFrame(loop);
-      return;
-    }
+  
+  for(let i=0; i<TOTAL; i++){
     const img = new Image();
-    img.src = BASE + pad(i+1) + '.jpg';
+    frames[i] = img;
+    
     img.onload = img.onerror = () => {
       loaded++;
       const p = Math.round(loaded/TOTAL*100);
-      llBar.style.width = p + '%';
-      llPct.textContent = `Initialisation… ${p}%`;
-      i++; next();
+      if(llBar && llPct) {
+        llBar.style.width = p + '%';
+        llPct.textContent = `Accélération… ${p}%`;
+      }
+      
+      // Démarrage rapide: Afficher l'écran de login après 10 images
+      if (loaded === 10 || loaded === TOTAL) {
+        if(!loader.classList.contains('hide')) {
+            loader.classList.add('hide');
+            running = true;
+            requestAnimationFrame(loop);
+        }
+      }
     };
-    frames[i] = img;
+    // Lancer le téléchargement sans bloquer le reste
+    img.src = BASE + pad(i+1) + '.jpg';
   }
-  next();
 })();
 </script>
 {% endblock %}
