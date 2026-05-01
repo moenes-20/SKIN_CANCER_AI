@@ -27,7 +27,7 @@ app_port: 7860
 ---
 
 ## 📺 Démonstration Vidéo
-*Aperçu vidéo du projet :*
+*Aperçu vidéo interactif du projet :*
 
 ![Démonstration du projet](Vedavatfinal.gif)
 
@@ -46,21 +46,31 @@ L'interface utilise des techniques avancées de rendu (**Canvas API**) pour des 
 
 ### 1. Site de Présentation Immersion
 ![Presentation Hero](screenshots/00_presentation_hero.png)
+*Landing page interactive avec effets de particules et design épuré.*
 
 ### 2. Animation Scroll-Stop
 ![Presentation Scroll](screenshots/00_presentation_scroll.png)
+*Déconstruction technique de l'analyse IA avec annotations dynamiques.*
 
 ### 3. Authentification Cinématique
 ![Login](screenshots/01_login.png)
+*Animation plein écran pilotée par canvas pour une fluidité maximale.*
 
 ### 4. Dashboard de Pilotage
 ![Dashboard](screenshots/02_dashboard.png)
+*Vue d'ensemble des statistiques et accès rapide aux outils d'analyse.*
 
 ### 5. Analyse Intelligente
 ![Analyse](03_predict_exemple.png)
+*Sélection et chargement de l'image dermatoscopique pour prédiction instantanée.*
 
 ### 6. Résultat de Diagnostic
 ![Résultat](03_predict_exemple_resultat.png)
+*Rapport détaillé généré par l'IA avec score de confiance en temps réel.*
+
+### 7. Suivi des Patients
+![Patients](screenshots/04_patients.png)
+*Historique complet des diagnostics enregistrés en base de données.*
 
 ---
 
@@ -68,11 +78,23 @@ L'interface utilise des techniques avancées de rendu (**Canvas API**) pour des 
 ## 🧠 Le Modèle & Résultats
 
 ### Architecture VGG16
-Le modèle est basé sur l'architecture **VGG16**, optimisée par Transfer Learning.
+Le modèle est basé sur l'architecture **VGG16**, optimisée par Transfer Learning. Il analyse les caractéristiques morphologiques des lésions pour fournir un diagnostic de précision.
 
 ### 📊 Performances Réelles
+Voici les résultats obtenus après l'entraînement du modèle :
+
 ![Metrics](resultat/training_metrics.png)
+*Évolution de la précision et de la perte sur 100 époques.*
+
 ![Confusion Matrix](resultat/confusion_matrix.png)
+*Matrice de confusion montrant la précision par classe (Bénin vs Malin).*
+
+![Classification Report](resultat/classification_report.png)
+*Rapport détaillé des métriques (Précision, Rappel, F1-Score).*
+
+### 📦 Téléchargement du Modèle
+Le modèle entraîné (`.h5`) est disponible sur Google Drive (~500 Mo) :
+👉 **[Télécharger vgg16_skin_cancer.h5](https://drive.google.com/file/d/12XF6OPGURb9wIqkE9kgjsDeZzj8MDbwx/view?usp=sharing)**
 
 ---
 
@@ -116,10 +138,53 @@ graph TD
 ---
 
 ## 🛠️ Outils & Technologies
+
 - **Backend** : Flask (Python)
 - **ML/IA** : TensorFlow, Keras (VGG16)
+- **Data** : NumPy, Pillow (Image Processing)
 - **Database** : MySQL
-- **Deployment** : Hugging Face (Backend), Vercel (Frontend)
+- **Frontend** : Vanilla JS (Canvas API), CSS Glassmorphism, Bootstrap Icons
+- **Deployment** : Hugging Face Spaces (Backend), Vercel (Frontend)
+
+---
+
+## 🚀 Installation Locale
+
+Suivez ces étapes pour lancer **Skin Cancer AI** sur votre machine :
+
+### 1. Préparation de l'environnement
+```bash
+# Cloner le projet
+git clone https://github.com/moenes-20/SKIN_CANCER_AI.git
+cd SKIN_CANCER_AI
+
+# Créer un environnement virtuel
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+```
+
+### 2. Installation des dépendances
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configuration Base de Données (MySQL)
+Configurez votre serveur MySQL local et importez le schéma :
+```sql
+CREATE DATABASE skin_cancer_db;
+-- Importez le fichier database.sql
+```
+
+### 4. Installation du Modèle
+Téléchargez le modèle depuis le lien Drive ci-dessus et placez-le dans le dossier `model/` :
+`model/vgg16_skin_cancer.h5`
+
+### 5. Lancement
+```bash
+# Double-cliquez sur :
+LANCER_SKIN_CANCER_AI.bat
+```
+Accédez au site de présentation via : `http://localhost:8080`
 
 ---
 
