@@ -20,18 +20,22 @@ app_port: 7860
 
 ---
 
-🔗 **[Accéder au Modèle (Google Drive)](https://drive.google.com/file/d/12XF6OPGURb9wIqkE9kgjsDeZzj8MDbwx/view?usp=sharing)** &nbsp;|&nbsp; 📸 **[Captures d'écran](#screenshots)** &nbsp;|&nbsp; 📊 **[Résultats d'Entraînement](#training)** &nbsp;|&nbsp; 🌐 **[Lancer le Site Web (Vercel)](https://skin-cancer-ai-beta.vercel.app/)**
+🔗 **[Accéder au Modèle (Google Drive)](https://drive.google.com/file/d/12XF6OPGURb9wIqkE9kgjsDeZzj8MDbwx/view?usp=sharing)** &nbsp;|&nbsp; 📸 **[Captures d'écran](#screenshots)** &nbsp;|&nbsp; 📊 **[Résultats d'Entraînement](#training)**
 
 </div>
 
 ---
 
-## 📺 Démonstration Vidéo
-*Regardez comment utiliser la plateforme en temps réel :*
+## 🌐 Site Web Officiel
+Accédez à la plateforme de présentation interactive ici :
+### 👉 **[https://skin-cancer-ai-beta.vercel.app/](https://skin-cancer-ai-beta.vercel.app/)**
 
-<p align="center">
-  <video src="https://github.com/moenes-20/SKIN_CANCER_AI/blob/main/Vedavatfinal.mp4?raw=true" width="100%" controls="controls"></video>
-</p>
+---
+
+## 📺 Démonstration Vidéo
+*Regardez la plateforme en action (Lecteur intégré) :*
+
+![](Vedavatfinal.mp4)
 
 ---
 
