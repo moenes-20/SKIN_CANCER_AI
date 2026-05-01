@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% set page_title = 'Résultat de la prédiction' %}
+{% block content %}
+<div class="result-layout reveal">
+  <section class="glass-card result-card {{ 'danger-result' if result == 'Malignant' else 'safe-result' }}">
+    <div class="result-status">
+      <span class="result-icon">
+        <i class="bi {{ 'bi-exclamation-triangle-fill' if result == 'Malignant' else 'bi-check-circle-fill' }}"></i>
+      </span>
+      <div>
+        <p class="eyebrow">Diagnostic IA</p>
+        <h2>{{ result }}</h2>
+        <p class="muted-text">Patient : <strong>{{ name }}</strong> • Âge : {{ age }} ans • Mode : {{ prediction_mode }}</p>
+      </div>
+    </div>
+
+    <div class="confidence-wrap">
+      <div class="confidence-ring" data-percent="{{ probability }}">
+        <span>{{ probability }}%</span>
+      </div>
+      <div>
+        <h3>Taux de confiance</h3>
+        <p>La valeur affichée représente la confiance associée à la classe prédite par le modèle.</p>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <a href="{{ url_for('predict') }}" class="btn-pro"><i class="bi bi-plus-circle"></i> Nouvelle analyse</a>
+      <a href="{{ url_for('patients') }}" class="btn-ghost"><i class="bi bi-table"></i> Voir l'historique</a>
+    </div>
+  </section>
+
+  <section class="glass-card image-result-card">
+    <div class="section-head mb-3">
+      <div>
+        <p class="eyebrow">Image analysée</p>
+        <h2>Prévisualisation</h2>
+      </div>
+    </div>
+    <img src="{{ url_for('static', filename=img) }}" class="result-image" alt="Image de la lésion">
+  </section>
+</div>
+{% endblock %}

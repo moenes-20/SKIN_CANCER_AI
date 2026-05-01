@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+{% set title = 'Connexion | ' ~ app_name %}
+{% set hide_nav = true %}
+{% block content %}
+<style>
+/* ══════════════════════════════════════════════
+   FULL-SCREEN CANVAS LOGIN
+══════════════════════════════════════════════ */
+body.app-body { overflow: hidden }
+
+/* Canvas fills the entire screen */
+#loginCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+}
+
+/* Dark vignette overlays */
+.lv-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(2,6,15,.75) 100%),
+    linear-gradient(to right, rgba(2,6,15,.55) 0%, transparent 40%, transparent 60%, rgba(2,6,15,.7) 100%),
+    linear-gradient(to bottom, rgba(2,6,15,.6) 0%, transparent 25%, transparent 75%, rgba(2,6,15,.8) 100%);
+}
+
+/* Scan line */
+.lv-scan {
+  position: fixed;
+  left: 0; right: 0; height: 2px;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(109,246,255,.55), transparent);
+  box-shadow: 0 0 20px rgba(109,246,255,.35);
+  animation: lv-scan 4s ease-in-out infinite;
+}
+@keyframes lv-scan { 0%{top:0} 50%{top:100%} 100%{top:0} }
+
+/* Loader */
+#loginLoader {
+  position: fixed;
+  inset: 0; z-index: 50;
+  background: #02060f;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px;
+  transition: opacity .8s ease;
+}
+#loginLoader.hide { opacity: 0; pointer-events: none }
+.ll-logo { font-family:'Archivo',sans-serif; font-size:26px; font-weight:900; color:#f0f6ff; letter-spacing:-.03em }
+.ll-logo span { color:#1378ff }
+.ll-bar-wrap { width:260px; height:3px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden }
+.ll-bar { height:100%; width:0; background:linear-gradient(90deg,#1378ff,#00c2ff); border-radius:999px; transition:width .08s linear }
+.ll-pct { font-size:12px; color:#7a9ab8; font-family:'JetBrains Mono',monospace }
+
+/* Annotation cards */
+.lv-anno {
+  position: fixed;
+  z-index: 10;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .55s ease, transform .55s ease;
+  pointer-events: none;
+}
+.lv-anno.show { opacity: 1; transform: none }
+.lv-card {
+  background: rgba(2,6,15,.8);
+  border: 1px solid rgba(19,120,255,.4);
+  border-radius: 18px; padding: 16px 20px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(19,120,255,.12);
+  min-width: 200px;
+}
+.lv-num { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.12em; color:#00c2ff; margin-bottom:6px; font-family:'JetBrains Mono',monospace }
+.lv-title { font-family:'Archivo',sans-serif; font-size:16px; font-weight:900; color:#f0f6ff; margin-bottom:4px; letter-spacing:-.02em }
+.lv-desc { font-size:12px; color:#7a9ab8; line-height:1.55; margin-bottom:8px }
+.lv-stat { font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; color:#00c2ff }
+.lv-stat small { font-size:12px; color:#7a9ab8; margin-left:2px }
+
+/* Brand block — bottom left */
+.lv-brand {
+  position: fixed;
+  bottom: 36px; left: 40px;
+  z-index: 10;
+  pointer-events: none;
+}
+.lv-brand .badge-soft { margin-bottom: 14px; display: inline-flex }
+.lv-brand h1 {
+  font-family: 'Archivo', sans-serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 900; letter-spacing: -.05em;
+  color: #fff; line-height: 1;
+  text-shadow: 0 4px 32px rgba(0,0,0,.8);
+  margin: 0;
+}
+.lv-brand p {
+  color: rgba(255,255,255,.55);
+  font-size: 15px; margin: 10px 0 0;
+  max-width: 360px; line-height: 1.6;
+}
+
+/* Progress dots — bottom right */
+.lv-dots {
+  position: fixed;
+  bottom: 40px; right: 48px;
+  z-index: 10;
+  display: flex; gap: 8px;
+}
+.lv-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+  transition: .4s ease;
+}
+.lv-dot.active {
+  background: #00c2ff;
+  box-shadow: 0 0 10px rgba(0,194,255,.7);
+  width: 22px; border-radius: 3px;
+}
+
+/* ── Centered login card ── */
+.login-stage {
+  position: fixed;
+  inset: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 0 6vw 0 0;
+}
+.login-card {
+  width: min(460px, 90vw);
+  padding: 40px;
+  border-radius: 28px;
+  background: rgba(5, 12, 30, 0.82) !important;
+  border: 1px solid rgba(19,120,255,.22) !important;
+  backdrop-filter: blur(32px);
+  box-shadow:
+    0 32px 80px rgba(0,0,0,.6),
+    0 0 0 1px rgba(255,255,255,.04),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+.login-head { text-align: center; margin-bottom: 30px }
+.icon-bubble {
+  width: 64px; height: 64px; border-radius: 22px;
+  display: inline-grid; place-items: center;
+  background: linear-gradient(135deg,rgba(19,120,255,.22),rgba(0,194,255,.15));
+  color: #00c2ff; font-size: 28px; margin-bottom: 18px;
+  border: 1px solid rgba(19,120,255,.3);
+  box-shadow: 0 8px 28px rgba(19,120,255,.25);
+}
+.login-head h2 {
+  font-family: 'Archivo', sans-serif;
+  font-size: 32px; font-weight: 900; letter-spacing: -.04em;
+  margin: 0 0 8px; color: #f0f6ff;
+}
+.login-head p { color: #7a9ab8; margin: 0; font-size: 14px }
+.smart-form { display: flex; flex-direction: column; gap: 14px }
+.input-group-pro {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px; border: 1px solid rgba(255,255,255,.09);
+  border-radius: 16px; background: rgba(255,255,255,.05);
+  min-height: 56px; transition: .2s ease; cursor: text;
+}
+.input-group-pro:focus-within {
+  border-color: rgba(19,120,255,.5);
+  box-shadow: 0 0 0 4px rgba(19,120,255,.12);
+  background: rgba(255,255,255,.07);
+}
+.input-group-pro i { font-size: 18px; color: #1378ff; flex-shrink: 0 }
+.input-group-pro input {
+  width: 100%; border: 0; outline: 0;
+  background: transparent; font-weight: 700;
+  color: #f0f6ff; font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+}
+.input-group-pro input::placeholder { color: #7a9ab8; font-weight: 600 }
+.btn-pro {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  border: 0; border-radius: 14px; font-weight: 800; padding: 16px 20px;
+  font-family: 'Space Grotesk', sans-serif; cursor: pointer; font-size: 15px;
+  color: #fff;
+  background: linear-gradient(135deg, #1378ff, #00c2ff);
+  box-shadow: 0 12px 32px rgba(19,120,255,.4);
+  transition: .22s ease; width: 100%;
+}
+.btn-pro:hover { transform: translateY(-3px); box-shadow: 0 20px 44px rgba(19,120,255,.5) }
+.w-100 { width: 100% }
+
+/* Responsive */
+@media(max-width:700px){
+  .login-stage { justify-content: center; padding: 0 16px }
+  .lv-brand { display: none }
+  .lv-anno  { display: none }
+}
+</style>
+
+<!-- ── Full-screen canvas ───────────────────── -->
+<canvas id="loginCanvas"></canvas>
+<div class="lv-vignette"></div>
+<div class="lv-scan"></div>
+
+<!-- Loader -->
+<div id="loginLoader">
+  <div class="ll-logo">Skin Cancer <span>AI</span></div>
+  <div class="ll-bar-wrap"><div class="ll-bar" id="llBar"></div></div>
+  <div class="ll-pct" id="llPct">Initialisation… 0%</div>
+</div>
+
+<!-- Floating annotation cards -->
+<div class="lv-anno" id="lva0" style="top:10%;left:3%">
+  <div class="lv-card">
+    <div class="lv-num">01 — Vision IA</div>
+    <div class="lv-title">Détection Multi-Couches</div>
+    <div class="lv-desc">Analyse dermatoscopique des lésions cutanées en temps réel.</div>
+    <div class="lv-stat">97.2% <small>précision</small></div>
+  </div>
+</div>
+
+<div class="lv-anno" id="lva1" style="top:10%;left:3%">
+  <div class="lv-card">
+    <div class="lv-num">02 — Réseau Neuronal</div>
+    <div class="lv-title">Architecture VGG16</div>
+    <div class="lv-desc">Modèle entraîné sur milliers d'images cliniques certifiées.</div>
+    <div class="lv-stat">224px <small>résolution</small></div>
+  </div>
+</div>
+
+<div class="lv-anno" id="lva2" style="top:10%;left:3%">
+  <div class="lv-card">
+    <div class="lv-num">03 — Vitesse Clinique</div>
+    <div class="lv-title">Résultat Instantané</div>
+    <div class="lv-desc">Bénin ou Malin avec score de confiance en moins de 2 secondes.</div>
+    <div class="lv-stat">&lt;2s <small>diagnostic</small></div>
+  </div>
+</div>
+
+<!-- Brand block bottom-left -->
+<div class="lv-brand">
+  <span class="badge-soft">Diagnostic IA Dermatologique</span>
+  <h1>Analyse intelligente<br>des lésions cutanées</h1>
+  <p>Déposez une image, obtenez une prédiction et suivez l'historique des diagnostics.</p>
+</div>
+
+<!-- Progress dots bottom-right -->
+<div class="lv-dots">
+  <div class="lv-dot active"></div>
+  <div class="lv-dot"></div>
+  <div class="lv-dot"></div>
+</div>
+
+<!-- ── Centered login form ──────────────────── -->
+<div class="login-stage">
+  <div class="login-card">
+    <div class="login-head">
+      <span class="icon-bubble"><i class="bi bi-person-lock"></i></span>
+      <h2>Connexion</h2>
+      <p>Accédez à l'espace professionnel d'analyse IA.</p>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);color:#ff4d6d;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:12px">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST" class="smart-form">
+      <label class="input-group-pro">
+        <i class="bi bi-person"></i>
+        <input type="text" name="username" placeholder="Nom d'utilisateur" required autocomplete="username">
+      </label>
+      <label class="input-group-pro">
+        <i class="bi bi-lock"></i>
+        <input type="password" name="password" placeholder="Mot de passe" required autocomplete="current-password">
+      </label>
+      <button class="btn-pro" type="submit">
+        Se connecter &nbsp;<i class="bi bi-arrow-right"></i>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  const TOTAL    = 96;
+  const FPS      = 12;
+  const INTERVAL = 1000 / FPS;
+  const canvas   = document.getElementById('loginCanvas');
+  const ctx      = canvas.getContext('2d');
+  const loader   = document.getElementById('loginLoader');
+  const llBar    = document.getElementById('llBar');
+  const llPct    = document.getElementById('llPct');
+  const annos    = [0,1,2].map(i => document.getElementById('lva'+i));
+  const dots     = document.querySelectorAll('.lv-dot');
+  const frames   = new Array(TOTAL);
+  const PHASE    = Math.floor(TOTAL / 3);
+
+  let loaded = 0, current = 0, lastPhase = -1, lastT = 0, running = false;
+
+  /* Resize canvas */
+  function resize(){
+    canvas.width  = window.innerWidth  * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width  = window.innerWidth  + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* Cover-fit draw */
+  function draw(img){
+    if(!img || !img.complete) return;
+    const cw = canvas.width, ch = canvas.height;
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const s  = Math.max(cw/iw, ch/ih);
+    const dw = iw*s, dh = ih*s;
+    ctx.clearRect(0,0,cw,ch);
+    ctx.drawImage(img, (cw-dw)/2, (ch-dh)/2, dw, dh);
+  }
+
+  /* RAF loop */
+  function loop(ts){
+    if(!running) return;
+    requestAnimationFrame(loop);
+    if(ts - lastT < INTERVAL) return;
+    lastT = ts;
+    draw(frames[current]);
+    current = (current + 1) % TOTAL;
+    syncUI();
+  }
+
+  /* Sync annotations + dots */
+  function syncUI(){
+    const phase = Math.floor(current / PHASE) % 3;
+    if(phase === lastPhase) return;
+    lastPhase = phase;
+    annos.forEach((a,i) => a.classList.toggle('show', i === phase));
+    dots.forEach((d,i)  => d.classList.toggle('active', i === phase));
+  }
+
+  /* Preload frames */
+  function pad(n){ return String(n).padStart(4,'0') }
+  const BASE = "{{ url_for('static', filename='img/login-frames/frame_') }}";
+  let i = 0;
+  function next(){
+    if(i >= TOTAL){
+      loader.classList.add('hide');
+      running = true;
+      requestAnimationFrame(loop);
+      return;
+    }
+    const img = new Image();
+    img.src = BASE + pad(i+1) + '.jpg';
+    img.onload = img.onerror = () => {
+      loaded++;
+      const p = Math.round(loaded/TOTAL*100);
+      llBar.style.width = p + '%';
+      llPct.textContent = `Initialisation… ${p}%`;
+      i++; next();
+    };
+    frames[i] = img;
+  }
+  next();
+})();
+</script>
+{% endblock %}

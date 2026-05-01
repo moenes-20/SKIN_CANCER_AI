@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% set page_title = 'Nouvelle analyse' %}
+{% block content %}
+<div class="analysis-layout reveal">
+  <section class="glass-card form-card">
+    <div class="section-head mb-4">
+      <div>
+        <p class="eyebrow">Analyse IA</p>
+        <h2>Soumettre une image de lésion</h2>
+        <p class="muted-text">Remplissez les informations du patient et importez une image claire de la zone à analyser.</p>
+      </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="smart-form">
+      <div class="row g-3">
+        <div class="col-md-7">
+          <label class="form-label-pro">Nom du patient</label>
+          <label class="input-group-pro light">
+            <i class="bi bi-person-vcard"></i>
+            <input type="text" name="name" placeholder="Ex : Ahmed Ben Ali" required>
+          </label>
+        </div>
+        <div class="col-md-5">
+          <label class="form-label-pro">Âge</label>
+          <label class="input-group-pro light">
+            <i class="bi bi-calendar2-heart"></i>
+            <input type="number" name="age" min="1" max="120" placeholder="Ex : 45" required>
+          </label>
+        </div>
+      </div>
+
+      <label class="form-label-pro mt-4">Image médicale</label>
+      <label class="upload-zone" id="uploadZone">
+        <input type="file" name="image" id="imageInput" accept="image/png,image/jpeg,image/jpg,image/webp" required hidden>
+        <div class="upload-content" id="uploadContent">
+          <i class="bi bi-cloud-arrow-up"></i>
+          <h3>Glissez ou cliquez pour importer</h3>
+          <p>Formats acceptés : JPG, PNG, JPEG, WEBP • Max 8 MB</p>
+        </div>
+        <img id="previewImage" class="preview-image" alt="Prévisualisation">
+      </label>
+
+      <button class="btn-pro btn-large mt-4" type="submit">
+        <i class="bi bi-stars"></i> Lancer l'analyse IA
+      </button>
+    </form>
+  </section>
+
+  <aside class="glass-card tips-card">
+    <span class="icon-bubble"><i class="bi bi-lightbulb"></i></span>
+    <h3>Conseils pour une bonne image</h3>
+    <ul class="tips-list">
+      <li><i class="bi bi-check-circle"></i> Image nette et bien éclairée.</li>
+      <li><i class="bi bi-check-circle"></i> Lésion centrée dans le cadre.</li>
+      <li><i class="bi bi-check-circle"></i> Éviter les flous et les ombres fortes.</li>
+      <li><i class="bi bi-check-circle"></i> Ne pas modifier la couleur originale.</li>
+    </ul>
+  </aside>
+</div>
+{% endblock %}

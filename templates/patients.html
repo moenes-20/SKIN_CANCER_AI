@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set page_title = 'Historique des patients' %}
+{% block content %}
+<section class="glass-card pro-section reveal">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Base de données</p>
+      <h2>Liste des patients analysés</h2>
+    </div>
+    <a href="{{ url_for('predict') }}" class="btn-pro"><i class="bi bi-plus-circle"></i> Ajouter</a>
+  </div>
+
+  {% if patients %}
+  <div class="table-responsive pro-table-wrap">
+    <table class="table pro-table align-middle">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Âge</th>
+          <th>Résultat</th>
+          <th>Probabilité</th>
+          <th>Image</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in patients %}
+        <tr>
+          <td><strong>{{ p.name }}</strong></td>
+          <td>{{ p.age }} ans</td>
+          <td>
+            <span class="status-pill {{ 'danger' if p.result == 'Malignant' else 'success' }}">
+              {{ p.result }}
+            </span>
+          </td>
+          <td>
+            <div class="progress-line"><span style="width: {{ p.probability }}%"></span></div>
+            <small>{{ '%.2f'|format(p.probability) }}%</small>
+          </td>
+          <td><img class="thumb" src="{{ url_for('static', filename=p.image_path) }}" alt="lésion"></td>
+          <td>{{ p.created_at.strftime('%d/%m/%Y %H:%M') if p.created_at else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-database-x"></i>
+    <h3>Aucun patient enregistré</h3>
+    <p>Commencez par créer une nouvelle analyse.</p>
+    <a href="{{ url_for('predict') }}" class="btn-pro">Nouvelle analyse</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

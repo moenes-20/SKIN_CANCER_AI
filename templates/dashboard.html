@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% set page_title = 'Dashboard clinique' %}
+{% block content %}
+
+<style>
+/* ── Hero avec canvas animé en fond ── */
+.hero-dashboard {
+  position: relative;
+  padding: 0;
+  min-height: 320px;
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 22px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Canvas background */
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* Overlays pour lisibilité du texte */
+.hero-canvas-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      rgba(2,6,15,.92) 0%,
+      rgba(2,6,15,.78) 45%,
+      rgba(2,6,15,.35) 70%,
+      transparent 100%
+    ),
+    linear-gradient(to bottom,
+      rgba(2,6,15,.5) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(2,6,15,.6) 100%
+    );
+}
+
+/* Scan line */
+.hero-scan {
+  position: absolute;
+  left: 0; right: 0; height: 2px;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(109,246,255,.5), transparent);
+  box-shadow: 0 0 16px rgba(109,246,255,.35);
+  animation: hscan 3.5s ease-in-out infinite;
+}
+@keyframes hscan { 0%{top:0} 50%{top:100%} 100%{top:0} }
+
+/* Content layer */
+.hero-content {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  width: 100%;
+  align-items: center;
+}
+.hero-text { padding: 36px 36px 36px 36px }
+.hero-text .badge-soft { margin-bottom: 18px; display: inline-flex }
+.hero-text h2 {
+  font-family: 'Archivo', sans-serif;
+  font-size: clamp(26px, 3.5vw, 46px);
+  font-weight: 900;
+  line-height: .96;
+  letter-spacing: -.05em;
+  margin: 0 0 14px;
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,.5);
+}
+.hero-text p {
+  color: rgba(240,246,255,.65);
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 520px;
+  margin: 0 0 24px;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap }
+
+/* Right scan panel */
+.scan-card {
+  height: 100%;
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 3;
+  border-left: 1px solid rgba(19,120,255,.2);
+  background: rgba(2,6,15,.35);
+  backdrop-filter: blur(8px);
+}
+.scan-card span {
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: .04em;
+  color: rgba(240,246,255,.8);
+}
+.scan-line {
+  position: absolute;
+  left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #6df6ff, transparent);
+  box-shadow: 0 0 18px #6df6ff;
+  animation: scan 2.4s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes scan { 0%{top:0} 50%{top:100%} 100%{top:0} }
+.skin-icon {
+  width: 72px; height: 72px;
+  color: #6df6ff;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 0 14px rgba(109,246,255,.65));
+}
+
+/* Responsive */
+@media(max-width:1100px){
+  .hero-content { grid-template-columns: 1fr }
+  .scan-card { display: none }
+  .hero-text { padding: 28px 22px }
+}
+</style>
+
+<!-- ── Hero avec canvas animé ─────────────────── -->
+<div class="hero-dashboard reveal">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-canvas-overlay"></div>
+  <div class="hero-scan"></div>
+
+  <div class="hero-content">
+    <!-- Texte gauche -->
+    <div class="hero-text">
+      <span class="badge-soft">Analyse IA Dermatologique</span>
+      <h2>Détection des lésions cutanées par intelligence artificielle.</h2>
+      <p>Déposez une image, laissez le modèle VGG16 générer un résultat et consultez l'historique des diagnostics enregistrés.</p>
+      <div class="hero-actions">
+        <a href="{{ url_for('predict') }}" class="btn-pro"><i class="bi bi-magic"></i> Nouvelle analyse</a>
+        <a href="{{ url_for('patients') }}" class="btn-ghost"><i class="bi bi-clock-history"></i> Historique</a>
+      </div>
+    </div>
+
+    <!-- Panneau droit scan -->
+    <div class="scan-card">
+      <div class="scan-line"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="skin-icon" aria-label="Dermatologie">
+        <rect x="8" y="14" width="48" height="10" rx="5" fill="currentColor" opacity=".9"/>
+        <rect x="8" y="26" width="48" height="10" rx="3" fill="currentColor" opacity=".55"/>
+        <rect x="8" y="38" width="48" height="10" rx="3" fill="currentColor" opacity=".28"/>
+        <ellipse cx="32" cy="14" rx="8" ry="5" fill="#ff6b9d" opacity=".95"/>
+        <circle cx="32" cy="14" r="3" fill="#fff" opacity=".85"/>
+        <circle cx="20" cy="14" r="1.5" fill="#6df6ff" opacity=".7"/>
+        <circle cx="44" cy="14" r="1.5" fill="#6df6ff" opacity=".7"/>
+        <line x1="8" y1="19" x2="56" y2="19" stroke="#6df6ff" stroke-width=".8" opacity=".4"/>
+        <line x1="8" y1="31" x2="56" y2="31" stroke="#6df6ff" stroke-width=".8" opacity=".25"/>
+      </svg>
+      <span>Analyse prête</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Stats ────────────────────────────────────── -->
+<div class="stats-grid reveal">
+  <div class="stat-card glass-card">
+    <span class="stat-icon blue"><i class="bi bi-people"></i></span>
+    <p>Total patients</p>
+    <h3>{{ stats.patients }}</h3>
+  </div>
+  <div class="stat-card glass-card">
+    <span class="stat-icon green"><i class="bi bi-check2-circle"></i></span>
+    <p>Cas bénins</p>
+    <h3>{{ stats.benign }}</h3>
+  </div>
+  <div class="stat-card glass-card">
+    <span class="stat-icon red"><i class="bi bi-exclamation-triangle"></i></span>
+    <p>Cas malins</p>
+    <h3>{{ stats.malignant }}</h3>
+  </div>
+  <div class="stat-card glass-card">
+    <span class="stat-icon purple"><i class="bi bi-speedometer2"></i></span>
+    <p>Confiance moyenne</p>
+    <h3>{{ stats.avg_confidence }}%</h3>
+  </div>
+</div>
+
+<!-- ── Activité récente ─────────────────────────── -->
+<div class="dashboard-grid reveal">
+  <section class="glass-card pro-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Derniers cas</p>
+        <h2>Activité récente</h2>
+      </div>
+      <a href="{{ url_for('patients') }}" class="mini-link">Voir tout</a>
+    </div>
+    <div class="recent-list">
+      {% for p in recent_patients %}
+      <div class="recent-item">
+        <img src="{{ url_for('static', filename=p.image_path) }}" alt="lésion">
+        <div>
+          <strong>{{ p.name }}</strong>
+          <span>{{ p.result }} • {{ '%.2f'|format(p.probability) }}%</span>
+        </div>
+        <em>{{ p.created_at.strftime('%d/%m') if p.created_at else '' }}</em>
+      </div>
+      {% else %}
+      <div class="empty-state compact">
+        <i class="bi bi-folder2-open"></i>
+        <p>Aucune analyse enregistrée pour le moment.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<!-- ── Canvas animation ────────────────────────── -->
+<script>
+(function(){
+  const TOTAL    = 96;
+  const FPS      = 10;          /* slower = more cinematic on dashboard */
+  const INTERVAL = 1000 / FPS;
+  const canvas   = document.getElementById('heroCanvas');
+  if(!canvas) return;
+  const ctx      = canvas.getContext('2d');
+  const frames   = new Array(TOTAL);
+  let loaded = 0, current = 0, lastT = 0, running = false;
+
+  function resize(){
+    canvas.width  = canvas.offsetWidth  * devicePixelRatio;
+    canvas.height = canvas.offsetHeight * devicePixelRatio;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw(img){
+    if(!img || !img.complete) return;
+    const cw = canvas.width, ch = canvas.height;
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const s  = Math.max(cw/iw, ch/ih);
+    ctx.clearRect(0,0,cw,ch);
+    ctx.drawImage(img,(cw-iw*s)/2,(ch-ih*s)/2,iw*s,ih*s);
+  }
+
+  function loop(ts){
+    if(!running) return;
+    requestAnimationFrame(loop);
+    if(ts - lastT < INTERVAL) return;
+    lastT = ts;
+    draw(frames[current]);
+    current = (current + 1) % TOTAL;
+  }
+
+  function pad(n){ return String(n).padStart(4,'0') }
+  const BASE = "{{ url_for('static', filename='img/login-frames/frame_') }}";
+  let i = 0;
+  function next(){
+    if(i >= TOTAL){ running = true; requestAnimationFrame(loop); return; }
+    const img = new Image();
+    img.src = BASE + pad(i+1) + '.jpg';
+    img.onload = img.onerror = () => { loaded++; i++; next(); };
+    frames[i] = img;
+  }
+  next();
+})();
+</script>
+{% endblock %}
