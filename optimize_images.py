@@ -20,7 +20,8 @@ def optimize_folder(folder_path):
                 except Exception as e:
                     print(f"ERROR: Erreur sur {file}: {e}")
 
-optimize_folder("presentation/img")
+# CETTE FOIS ON VISE LE BON DOSSIER
+optimize_folder("presentation/frames")
 optimize_folder("static/img")
 
 print("\nOptimisation terminee !")
