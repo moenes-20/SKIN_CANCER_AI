@@ -27,9 +27,11 @@ app_port: 7860
 ---
 
 ## 📺 Démonstration Vidéo
-*Aperçu vidéo interactif du projet :*
+*Vivez l'expérience complète et interactive directement sur notre site de présentation :*
 
-![Démonstration du projet](Vedavatfinal.gif)
+[![Démonstration du projet](screenshots/00_presentation_hero.png)](https://skin-cancer-ai-beta.vercel.app/)
+
+👉 **[Cliquez ici pour lancer la démonstration interactive (Site Web)](https://skin-cancer-ai-beta.vercel.app/)**
 
 ---
 
