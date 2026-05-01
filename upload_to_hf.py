@@ -7,7 +7,7 @@ load_dotenv()
 
 # CONFIGURATION
 REPO_ID = "moenes123/skin-cancer-ai-v2" 
-TOKEN = os.getenv("HF_TOKEN") # Ne pas mettre le token ici pour GitHub !
+TOKEN = "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" 
 
 api = HfApi()
 

@@ -266,13 +266,13 @@ def predict():
     return render_template("predict.html")
 
 # --- CONFIGURATION BASE DE DONNÉES ---
-# Identifiants Aiven (Cloud) - Configurer dans les variables d'environnement
+# Identifiants Aiven (Cloud)
 AIVEN_CONFIG = {
-    'host': os.getenv('AIVEN_HOST', 'skin-cancer-db-skin-cancer-ai.h.aivencloud.com'),
-    'port': int(os.getenv('AIVEN_PORT', 16185)),
-    'user': os.getenv('AIVEN_USER', 'avnadmin'),
-    'password': os.getenv('AIVEN_PASSWORD'), # PLUS DE MOT DE PASSE ICI !
-    'database': os.getenv('AIVEN_DB', 'defaultdb')
+    'host': 'skin-cancer-db-skin-cancer-ai.h.aivencloud.com',
+    'port': 16185,
+    'user': 'avnadmin',
+    'password': 'AVNS_KudJcEj6iBkr-sTogoU',
+    'database': 'defaultdb'
 }
 
 # Identifiants Locaux (votre ordinateur)
